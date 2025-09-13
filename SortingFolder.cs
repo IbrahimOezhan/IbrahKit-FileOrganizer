@@ -3,7 +3,7 @@
 namespace FileOrganizer
 {
     internal class SortingFolder
-    {
+    { 
         [JsonInclude]
         private string folder;
         [JsonInclude]
