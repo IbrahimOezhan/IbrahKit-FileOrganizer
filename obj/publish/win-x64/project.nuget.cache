@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "vfsjmpxDkEE=",
+  "success": true,
+  "projectFilePath": "E:\\VS\\IbrahOrganizer\\IbrahOrganizer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ibrah\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.20\\microsoft.net.illink.tasks.8.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}
