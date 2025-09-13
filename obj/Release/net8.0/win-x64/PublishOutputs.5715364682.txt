@@ -1,2 +1,0 @@
-E:\VS\IbrahOrganizer\bin\Release\IbrahOrganizer.pdb
-E:\VS\IbrahOrganizer\bin\Release\IbrahOrganizer.exe
