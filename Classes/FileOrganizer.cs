@@ -1,17 +1,66 @@
 ﻿using System.Diagnostics;
 
-namespace FileOrganizer
+namespace FileOrganizer.Classes
 {
-    internal class Program
+    internal class FileOrganizer
     {
-        static void Main(string[] args)
+        public FileOrganizer()
         {
-            string fullProcessPath = Process.GetCurrentProcess().MainModule.FileName;
+            ProcessModule? process = Process.GetCurrentProcess().MainModule;
 
-            string processFolder = Path.GetDirectoryName(fullProcessPath);
+            string? processPath = process.FileName;
 
-            SortingConfig config = SortingConfig.Get(processFolder);
+            string? processDir = Path.GetDirectoryName(processPath);
 
+            SortingConfig config = SortingConfig.Get(processDir);
+
+            Task.Delay(1000);
+
+            Console.WriteLine($"Welcome to the FileOranizer. Running in {processDir}");
+
+            Task.Delay(1000);
+
+            while (true)
+            {
+                Console.WriteLine("");
+
+                bool notEqual = !SortingConfig.GetJsonCurrent(processDir).Equals(SortingConfig.GetJsonDefault());
+
+                if (notEqual)
+                {
+                    Console.WriteLine("Sorting Config detected which seems to not equal the default values");
+                }
+
+                Console.Write("Organize Files > 1 , Reset Config to Default > 2: ");
+
+                ConsoleKeyInfo input = Console.ReadKey();
+
+                Console.WriteLine("\n");
+
+                string inputStr = input.KeyChar.ToString();
+
+                bool breakLoop = false;
+
+                switch (inputStr)
+                {
+                    case "1":
+                        Organize(config, processPath);
+                        breakLoop = true;
+                        break;
+                    case "2":
+                        config = SortingConfig.Reset(processDir);
+                        break;
+                    default:
+                        Console.WriteLine("Unrecognized Command");
+                        break;
+                }
+
+                if (breakLoop) break;
+            }
+        }
+
+        private static void Organize(SortingConfig config, string fullProcessPath)
+        {
             List<SortingFolder> folders = config.GetFolders();
 
             for (int i = 0; i < folders.Count; i++)
@@ -44,8 +93,6 @@ namespace FileOrganizer
 
                     Console.WriteLine($"FROM {filesToSort[i]} TO {newPath} AND UNIQUE {uniquePath}");
                 }
-
-
             }
 
             List<string> foldersToSort = GetDirectoriesToSort(fullProcessPath, folders);
@@ -60,23 +107,21 @@ namespace FileOrganizer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine($"Old: {foldersToSort[i]} and new {newPath}");
+                    Console.WriteLine($"Old: {foldersToSort[i]} and new {newPath} with exception: {e.Message}");
                 }
             }
 
             Console.WriteLine("Success");
-
-            Console.ReadKey();
         }
 
         private static List<string> GetFilesToSort(string process)
         {
-            string folder = Path.GetDirectoryName(process);
+            string? folder = Path.GetDirectoryName(process);
 
             List<string> items = Directory.GetFiles(folder).ToList();
 
             items.Remove(process);
+
             items.Remove(Path.Combine(folder, SortingConfig.configName));
 
             return items;
@@ -84,7 +129,7 @@ namespace FileOrganizer
 
         private static List<string> GetDirectoriesToSort(string process, List<SortingFolder> folders)
         {
-            string folder = Path.GetDirectoryName(process);
+            string? folder = Path.GetDirectoryName(process);
 
             List<string> items = Directory.GetDirectories(folder).ToList();
 
@@ -116,7 +161,7 @@ namespace FileOrganizer
 
             string ext = Path.GetExtension(filePath);
 
-            string dir = Path.GetDirectoryName(filePath);
+            string? dir = Path.GetDirectoryName(filePath);
 
             return Path.Combine(dir, name + random.Next(9999).ToString() + ext);
         }

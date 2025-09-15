@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FileOrganizer
+namespace FileOrganizer.Classes
 {
     internal class SortingFolder
-    { 
+    {
         [JsonInclude]
         private string folder;
         [JsonInclude]
