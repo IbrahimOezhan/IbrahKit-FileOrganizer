@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+
 jobs:
   build:
     runs-on: windows-latest
@@ -12,7 +13,15 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-      - run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -o publish
+
+      # Framework-dependent (tiny, requires .NET installed)
+      - run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=false -o publish/fdd
+
+      # Self-contained (big, no runtime needed)
+      - run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -o publish/scd
+
       - uses: softprops/action-gh-release@v1
         with:
-          files: publish/**
+          files: |
+            publish/fdd/**
+            publish/scd/**
