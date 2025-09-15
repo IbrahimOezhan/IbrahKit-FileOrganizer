@@ -14,24 +14,23 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Framework-dependent (small, needs .NET runtime installed)
+      # Framework-dependent
       - run: dotnet publish FileOrganizer.csproj -c Release -r win-x64 `
           -p:PublishSingleFile=true `
           -p:SelfContained=false `
           -p:AssemblyName=FileOrganizer-framework-dependent `
           -o publish/framework-dependent
 
-      # Self-contained (large, includes runtime)
+      # Self-contained
       - run: dotnet publish FileOrganizer.csproj -c Release -r win-x64 `
           -p:PublishSingleFile=true `
           -p:SelfContained=true `
           -p:AssemblyName=FileOrganizer-self-contained `
           -o publish/self-contained
 
-      # Upload with versioned filenames
       - name: Upload release assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            publish/framework-dependent/FileOrganizer-framework-dependent.exe#FileOrganizer-${{ github.ref_name }}-framework-dependent.exe
-            publish/self-contained/FileOrganizer-self-contained.exe#FileOrganizer-${{ github.ref_name }}-self-contained.exe
+            publish/framework-dependent/*.exe
+            publish/self-contained/*.exe
